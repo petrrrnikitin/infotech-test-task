@@ -26,6 +26,9 @@
                     <li class="nav-item">
                         <?= CHtml::link('Авторы', ['/author/index'], ['class' => 'nav-link']) ?>
                     </li>
+                    <li class="nav-item">
+                        <?= CHtml::link('Отчет', ['/report/topAuthors'], ['class' => 'nav-link']) ?>
+                    </li>
                 </ul>
             </div>
         </div>

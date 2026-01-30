@@ -59,4 +59,38 @@ class AuthorService extends CApplicationComponent
         }
         return $author;
     }
+
+
+    /**
+     * Получение ТОП авторов по году издания книг
+     *
+     * @param int $year Год издания
+     * @param int $limit Лимит результатов
+     * @return array{author: Author, book_count: int}[] Массив с авторами и количеством книг
+     */
+    public function getTopAuthorsByYear(int $year, int $limit = 10): array
+    {
+        $rows = Yii::app()->db->createCommand()
+            ->select('a.id, a.first_name, a.last_name, a.middle_name, COUNT(DISTINCT b.id) as book_count')
+            ->from('authors a')
+            ->join('book_authors ba', 'ba.author_id = a.id')
+            ->join('books b', 'b.id = ba.book_id')
+            ->where('b.year = :year', [':year' => $year])
+            ->group('a.id')
+            ->order('book_count DESC')
+            ->limit($limit)
+            ->queryAll();
+
+        $results = [];
+        foreach ($rows as $row) {
+            $author = new Author();
+            $author->setAttributes($row, false);
+            $results[] = [
+                'author' => $author,
+                'book_count' => (int)$row['book_count'],
+            ];
+        }
+
+        return $results;
+    }
 }
