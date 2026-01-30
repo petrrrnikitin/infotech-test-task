@@ -78,16 +78,20 @@ class SubscriptionService extends CApplicationComponent
 
         $subscriptions = $this->getSubscribersByAuthorIds($authorIds);
 
-        $authorNames = implode(', ',
+        $authorNames = implode(
+            ', ',
             array_map(
                 static fn(Author $author) => $author->getFullName(),
-                $book->authors)
+                $book->authors
+            )
         );
         $message = "Новая книга: \"{$book->getTitle()}\" ({$authorNames})";
 
-        array_map(static fn(Subscription $subscription) => Yii::app()->queue->push('SendSmsJob', [
-            'phone' => $subscription->phone,
-            'message' => $message,
-        ]), $subscriptions);
+        foreach ($subscriptions as $subscription) {
+            Yii::app()->queue->push('SendSmsJob', [
+                'phone' => $subscription->phone,
+                'message' => $message,
+            ]);
+        }
     }
 }

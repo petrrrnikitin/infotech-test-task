@@ -17,87 +17,87 @@ class Author extends CActiveRecord
     public $full_name;
     public $books_count;
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName(): string
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName(): string
     {
-		return 'authors';
-	}
+        return 'authors';
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules(): array
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules(): array
     {
-		return [
-			['first_name, last_name', 'required'],
-			['first_name, last_name, middle_name', 'length', 'max'=>100],
-			['id, first_name, last_name, middle_name', 'safe', 'on'=>'search'],
+        return [
+            ['first_name, last_name', 'required'],
+            ['first_name, last_name, middle_name', 'length', 'max' => 100],
+            ['id, first_name, last_name, middle_name', 'safe', 'on' => 'search'],
         ];
-	}
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations(): array
+    /**
+     * @return array relational rules.
+     */
+    public function relations(): array
     {
-		return [
-			'books' => [self::MANY_MANY, 'Book', 'book_authors(author_id, book_id)'],
+        return [
+            'books' => [self::MANY_MANY, 'Book', 'book_authors(author_id, book_id)'],
         ];
-	}
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels(): array
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels(): array
     {
-		return [
-			'id' => 'ID',
-			'first_name' => 'Имя',
-			'last_name' => 'Фамилия',
-			'middle_name' => 'Отчество',
+        return [
+            'id' => 'ID',
+            'first_name' => 'Имя',
+            'last_name' => 'Фамилия',
+            'middle_name' => 'Отчество',
             'full_name' => 'ФИО',
             'books_count' => 'Количество книг',
         ];
-	}
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search(): CActiveDataProvider
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search(): CActiveDataProvider
     {
-		$criteria=new CDbCriteria;
+        $criteria = new CDbCriteria();
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('first_name',$this->first_name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('middle_name',$this->middle_name,true);
+        $criteria->compare('id', $this->id);
+        $criteria->compare('first_name', $this->first_name, true);
+        $criteria->compare('last_name', $this->last_name, true);
+        $criteria->compare('middle_name', $this->middle_name, true);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        return new CActiveDataProvider($this, [
+            'criteria' => $criteria,
+        ]);
+    }
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Author the static model class
-	 */
-	public static function model($className=__CLASS__): Author
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Author the static model class
+     */
+    public static function model($className = __CLASS__): Author
     {
-		return parent::model($className);
-	}
+        return parent::model($className);
+    }
 
     public function getFullName(): string
     {

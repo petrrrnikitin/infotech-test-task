@@ -6,73 +6,72 @@
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return [
-	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Web Application',
+    'basePath' => __DIR__ . DIRECTORY_SEPARATOR . '..',
+    'name' => 'My Web Application',
 
-	// preloading 'log' component
-	'preload'=> ['log'],
+    // preloading 'log' component
+    'preload' => ['log'],
 
-	// autoloading model and component classes
-	'import'=> [
-		'application.models.*',
-		'application.components.*',
-		'application.services.*',
-		'application.exceptions.*',
-		'application.dto.*',
-		'application.jobs.*',
+    // autoloading model and component classes
+    'import' => [
+        'application.models.*',
+        'application.components.*',
+        'application.services.*',
+        'application.exceptions.*',
+        'application.dto.*',
+        'application.jobs.*',
     ],
 
-	'modules'=> [
-		'gii'=> [
-			'class'=>'system.gii.GiiModule',
-			'password'=>'admin',
-			// Allow all IPs for Docker environment
-			'ipFilters'=> ['*'],
+    'modules' => [
+        'gii' => [
+            'class' => 'system.gii.GiiModule',
+            'password' => getenv('GII_PASSWORD'),
+            'ipFilters' => ['127.0.0.1', '::1'],
         ],
     ],
 
-	// application components
-	'components'=> [
+    // application components
+    'components' => [
 
-		'user'=> [
-			'class' => 'WebUser',
-			'allowAutoLogin' => true,
-			'loginUrl' => ['site/login'],
+        'user' => [
+            'class' => 'WebUser',
+            'allowAutoLogin' => true,
+            'loginUrl' => ['site/login'],
         ],
 
-		'request' => [
-			'enableCsrfValidation' => true,
-			'csrfTokenName' => 'csrf_token',
+        'request' => [
+            'enableCsrfValidation' => true,
+            'csrfTokenName' => 'csrf_token',
         ],
 
-		'urlManager'=>array(
-			'urlFormat'=>'path',
-			'rules'=>array(
-				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-			),
-		),
-
-		'db'=> require(dirname(__FILE__) . '/database.php'),
-
-		'errorHandler'=> [
-			'errorAction'=>YII_DEBUG ? null : 'site/error',
+        'urlManager' => [
+            'urlFormat' => 'path',
+            'rules' => [
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ],
         ],
 
-		'log'=> [
-			'class'=>'CLogRouter',
-			'routes'=> [
-				[
-					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning',
+        'db' => require __DIR__ . '/database.php',
+
+        'errorHandler' => [
+            'errorAction' => YII_DEBUG ? null : 'site/error',
+        ],
+
+        'log' => [
+            'class' => 'CLogRouter',
+            'routes' => [
+                [
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning',
                 ],
-				// uncomment the following to show log messages on web pages
-				/*
-				array(
-					'class'=>'CWebLogRoute',
-				),
-				*/
+                // uncomment the following to show log messages on web pages
+                /*
+                array(
+                    'class'=>'CWebLogRoute',
+                ),
+                */
             ],
         ],
 
@@ -87,7 +86,7 @@ return [
         ],
         'authManager' => [
             'class' => 'CPhpAuthManager',
-            'authFile' => dirname(__FILE__) . '/auth.php',
+            'authFile' => __DIR__ . '/auth.php',
         ],
         'fileUploader' => [
             'class' => 'application.components.FileUploader',
@@ -101,7 +100,7 @@ return [
         'queue' => [
             'class' => 'application.components.QueueComponent',
             'host' => getenv('RABBITMQ_HOST'),
-            'port' => (int) getenv('RABBITMQ_PORT'),
+            'port' => (int)getenv('RABBITMQ_PORT'),
             'user' => getenv('RABBITMQ_USER'),
             'password' => getenv('RABBITMQ_PASSWORD'),
         ],
@@ -112,10 +111,10 @@ return [
 
     ],
 
-	// application-level parameters that can be accessed
-	// using Yii::app()->params['paramName']
-	'params'=> [
-		// this is used in contact page
-		'adminEmail'=>'webmaster@example.com',
+    // application-level parameters that can be accessed
+    // using Yii::app()->params['paramName']
+    'params' => [
+        // this is used in contact page
+        'adminEmail' => 'webmaster@example.com',
     ],
 ];

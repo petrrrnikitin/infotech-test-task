@@ -7,35 +7,35 @@
  */
 class UserIdentity extends CUserIdentity
 {
-	private $_id;
+    private $_id;
 
-	/**
-	 * Authenticates a user against the database.
-	 * @return boolean whether authentication succeeds.
-	 */
-	public function authenticate(): bool
-	{
-		$user = User::findByUsername($this->username);
+    /**
+     * Authenticates a user against the database.
+     * @return boolean whether authentication succeeds.
+     */
+    public function authenticate(): bool
+    {
+        $user = User::findByUsername($this->username);
 
-		if ($user === null) {
-			$this->errorCode = self::ERROR_USERNAME_INVALID;
-		} elseif (!$user->validatePassword($this->password)) {
-			$this->errorCode = self::ERROR_PASSWORD_INVALID;
-		} else {
-			$this->_id = $user->id;
-			$this->setState('email', $user->email);
-			$this->setState('role', $user->role);
-			$this->errorCode = self::ERROR_NONE;
-		}
+        if ($user === null) {
+            $this->errorCode = self::ERROR_USERNAME_INVALID;
+        } elseif (!$user->validatePassword($this->password)) {
+            $this->errorCode = self::ERROR_PASSWORD_INVALID;
+        } else {
+            $this->_id = $user->id;
+            $this->setState('email', $user->email);
+            $this->setState('role', $user->role);
+            $this->errorCode = self::ERROR_NONE;
+        }
 
-		return $this->errorCode === self::ERROR_NONE;
-	}
+        return $this->errorCode === self::ERROR_NONE;
+    }
 
-	/**
-	 * @return integer the ID of the user record
-	 */
-	public function getId(): int
-	{
-		return $this->_id;
-	}
+    /**
+     * @return integer the ID of the user record
+     */
+    public function getId(): int
+    {
+        return $this->_id;
+    }
 }

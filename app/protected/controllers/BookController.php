@@ -59,7 +59,7 @@ class BookController extends Controller
                 $book = Yii::app()->bookService->createBook(BookDto::fromRequest($bookData));
                 Yii::app()->user->setFlash('success', 'Книга успешно создана');
                 $this->redirect(['view', 'id' => $book->id]);
-            } catch (ValidationException|FileUploadException $e) {
+            } catch (ValidationException | FileUploadException $e) {
                 Yii::app()->user->setFlash('error', $e->getMessage());
             }
         }
@@ -83,7 +83,7 @@ class BookController extends Controller
             $this->redirect(['view', 'id' => $id]);
         } catch (NotFoundException $e) {
             throw new CHttpException(404, $e->getMessage());
-        } catch (ValidationException|FileUploadException $e) {
+        } catch (ValidationException | FileUploadException $e) {
             Yii::app()->user->setFlash('error', $e->getMessage());
         }
 

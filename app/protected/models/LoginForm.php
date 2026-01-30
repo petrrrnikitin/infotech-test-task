@@ -7,78 +7,77 @@
  */
 class LoginForm extends CFormModel
 {
-	public $username;
-	public $password;
-	public $rememberMe;
+    public $username;
+    public $password;
+    public $rememberMe;
 
-	private $_identity;
+    private $_identity;
 
-	/**
-	 * Declares the validation rules.
-	 * The rules state that username and password are required,
-	 * and password needs to be authenticated.
-	 */
-	public function rules(): array
+    /**
+     * Declares the validation rules.
+     * The rules state that username and password are required,
+     * and password needs to be authenticated.
+     */
+    public function rules(): array
     {
-		return [
-			// username and password are required
-			['username, password', 'required'],
-			// rememberMe needs to be a boolean
-			['rememberMe', 'boolean'],
-			// password needs to be authenticated
-			['password', 'authenticate'],
+        return [
+            // username and password are required
+            ['username, password', 'required'],
+            // rememberMe needs to be a boolean
+            ['rememberMe', 'boolean'],
+            // password needs to be authenticated
+            ['password', 'authenticate'],
         ];
-	}
+    }
 
-	/**
-	 * Declares attribute labels.
-	 */
-	public function attributeLabels(): array
+    /**
+     * Declares attribute labels.
+     */
+    public function attributeLabels(): array
     {
-		return [
-			'username' => 'Имя пользователя',
-			'password' => 'Пароль',
-			'rememberMe' => 'Запомнить меня',
+        return [
+            'username' => 'Имя пользователя',
+            'password' => 'Пароль',
+            'rememberMe' => 'Запомнить меня',
         ];
-	}
+    }
 
-	/**
-	 * Authenticates the password.
-	 * This is the 'authenticate' validator as declared in rules().
-	 * @param string $attribute the name of the attribute to be validated.
-	 * @param array $params additional parameters passed with rule when being executed.
-	 */
-	public function authenticate(string $attribute, array $params): void
+    /**
+     * Authenticates the password.
+     * This is the 'authenticate' validator as declared in rules().
+     * @param string $attribute the name of the attribute to be validated.
+     * @param array $params additional parameters passed with rule when being executed.
+     */
+    public function authenticate(string $attribute, array $params): void
     {
-		if(!$this->hasErrors())
-		{
-			$this->_identity=new UserIdentity($this->username,$this->password);
-			if(!$this->_identity->authenticate())
-				$this->addError('password','Incorrect username or password.');
-		}
-	}
+        if (!$this->hasErrors()) {
+            $this->_identity = new UserIdentity($this->username, $this->password);
+            if (!$this->_identity->authenticate()) {
+                $this->addError('password', 'Incorrect username or password.');
+            }
+        }
+    }
 
-	/**
-	 * Logs in the user using the given username and password in the model.
-	 * @return boolean whether login is successful
-	 */
-	public function login(): bool
+    /**
+     * Logs in the user using the given username and password in the model.
+     * @return boolean whether login is successful
+     */
+    public function login(): bool
     {
-		if ($this->_identity === null) {
-			$this->_identity = new UserIdentity($this->username, $this->password);
-			$this->_identity->authenticate();
-		}
+        if ($this->_identity === null) {
+            $this->_identity = new UserIdentity($this->username, $this->password);
+            $this->_identity->authenticate();
+        }
 
-		if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
-			$duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
+        if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
+            $duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
 
-			// Регенерация session ID для защиты от session fixation
-			Yii::app()->session->regenerateID(true);
+            Yii::app()->session->regenerateID(true);
 
-			Yii::app()->user->login($this->_identity, $duration);
-			return true;
-		}
+            Yii::app()->user->login($this->_identity, $duration);
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

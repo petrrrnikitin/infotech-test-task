@@ -1,4 +1,5 @@
 <?php
+
 $this->pageTitle = 'Книги';
 ?>
 
@@ -6,10 +7,11 @@ $this->pageTitle = 'Книги';
     <h2 class="mb-0">Каталог книг</h2>
 </div>
 
-<?php $this->widget('zii.widgets.CListView', [
-    'dataProvider' => $dataProvider,
-    'itemView' => '/book/_item',
-    'itemsCssClass' => 'row',
-    'summaryCssClass' => 'text-muted mb-3',
-    'pagerCssClass' => 'd-flex justify-content-center',
+<?php
+$this->widget('zii.widgets.CListView', [
+        'dataProvider' => $dataProvider,
+        'itemView' => '/book/_item',
+        'itemsCssClass' => 'row',
+        'summaryCssClass' => 'text-muted mb-3',
+        'pagerCssClass' => 'd-flex justify-content-center',
 ]); ?>

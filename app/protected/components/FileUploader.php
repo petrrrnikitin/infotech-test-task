@@ -6,6 +6,12 @@ class FileUploader extends CApplicationComponent
     public int $maxFileSize;
     /** @var string[] */
     public array $allowedExtensions;
+    /** @var string[] */
+    public array $allowedMimeTypes = [
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+    ];
 
     /**
      * Загрузка файла
@@ -23,17 +29,30 @@ class FileUploader extends CApplicationComponent
         }
 
         $extension = strtolower($file->getExtensionName());
-        if (!in_array($extension, $this->allowedExtensions)) {
-            throw new FileUploadException('Недопустимый тип файла. Разрешены: ' . implode(', ', $this->allowedExtensions));
+        if (!in_array($extension, $this->allowedExtensions, true)) {
+            throw new FileUploadException(
+                'Недопустимый тип файла. Разрешены: ' . implode(', ', $this->allowedExtensions)
+            );
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file->getTempName());
+        finfo_close($finfo);
+
+        $expectedMime = $this->allowedMimeTypes[$extension] ?? null;
+        if ($expectedMime === null || $mimeType !== $expectedMime) {
+            throw new FileUploadException('Недопустимый MIME-тип файла');
         }
 
         if ($file->getSize() > $this->maxFileSize) {
-            throw new FileUploadException('Файл слишком большой. Максимальный размер: ' . ($this->maxFileSize / 1024 / 1024) . ' MB');
+            throw new FileUploadException(
+                'Файл слишком большой. Максимальный размер: ' . ($this->maxFileSize / 1024 / 1024) . ' MB'
+            );
         }
 
         $uploadDir = $this->baseUploadPath . '/' . $directory;
         if (!is_dir($uploadDir)) {
-            if (!mkdir($uploadDir, 0777, true) && !is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $uploadDir));
             }
         }

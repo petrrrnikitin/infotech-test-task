@@ -3,32 +3,32 @@
 // This is the configuration for yiic console application.
 // Any writable CConsoleApplication properties can be configured here.
 return [
-	'basePath'=> dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'My Console Application',
+    'basePath' => __DIR__ . DIRECTORY_SEPARATOR . '..',
+    'name' => 'My Console Application',
 
-	// preloading 'log' component
-	'preload'=> ['log'],
+    // preloading 'log' component
+    'preload' => ['log'],
 
-	// autoloading model and component classes
-	'import'=> [
-		'application.models.*',
-		'application.components.*',
-		'application.services.*',
-		'application.exceptions.*',
-		'application.jobs.*',
+    // autoloading model and component classes
+    'import' => [
+        'application.models.*',
+        'application.components.*',
+        'application.services.*',
+        'application.exceptions.*',
+        'application.jobs.*',
     ],
 
-	// application components
-	'components'=> [
+    // application components
+    'components' => [
 
-		'db'=> require(dirname(__FILE__) . '/database.php'),
+        'db' => require __DIR__ . '/database.php',
 
-		'log'=> [
-			'class'=>'CLogRouter',
-			'routes'=> [
-				[
-					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning, info',
+        'log' => [
+            'class' => 'CLogRouter',
+            'routes' => [
+                [
+                    'class' => 'CFileLogRoute',
+                    'levels' => 'error, warning, info',
                 ],
             ],
         ],
@@ -36,7 +36,7 @@ return [
         'queue' => [
             'class' => 'application.components.QueueComponent',
             'host' => getenv('RABBITMQ_HOST'),
-            'port' => (int) getenv('RABBITMQ_PORT') ?: 5672,
+            'port' => (int)getenv('RABBITMQ_PORT') ?: 5672,
             'user' => getenv('RABBITMQ_USER'),
             'password' => getenv('RABBITMQ_PASSWORD'),
         ],

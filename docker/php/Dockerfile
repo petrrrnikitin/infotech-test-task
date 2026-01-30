@@ -15,12 +15,17 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip sockets
 
-# AMQP extension for RabbitMQ
 RUN pecl install amqp && docker-php-ext-enable amqp
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+COPY app/composer.json app/composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader
+
+COPY app/ ./
+RUN composer dump-autoload --optimize
 
 RUN mkdir -p /var/www/html/uploads/books && chmod -R 755 /var/www/html/uploads
 

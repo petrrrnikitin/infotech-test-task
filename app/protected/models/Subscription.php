@@ -24,13 +24,12 @@ class Subscription extends CActiveRecord
 	 */
 	public function rules(): array
     {
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return [
 			['author_id, phone', 'required'],
-			['author_id', 'numerical', 'integerOnly'=>true],
-			['phone', 'length', 'max'=>20],
-			['id, author_id, phone, created_at', 'safe', 'on'=>'search'],
+			['author_id', 'numerical', 'integerOnly' => true],
+			['phone', 'length', 'max' => 20],
+			['phone', 'match', 'pattern' => '/^(\+7|8|7)\d{10}$/', 'message' => 'Неверный формат телефона'],
+			['id, author_id, phone, created_at', 'safe', 'on' => 'search'],
         ];
 	}
 
@@ -69,18 +68,16 @@ class Subscription extends CActiveRecord
 	 */
 	public function search(): CActiveDataProvider
     {
-		// @todo Please modify the following code to remove attributes that should not be searched.
+		$criteria = new CDbCriteria;
 
-		$criteria=new CDbCriteria;
+		$criteria->compare('id', $this->id);
+		$criteria->compare('author_id', $this->author_id);
+		$criteria->compare('phone', $this->phone, true);
+		$criteria->compare('created_at', $this->created_at, true);
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('author_id',$this->author_id);
-		$criteria->compare('phone',$this->phone,true);
-		$criteria->compare('created_at',$this->created_at,true);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+		return new CActiveDataProvider($this, [
+			'criteria' => $criteria,
+		]);
 	}
 
 	/**

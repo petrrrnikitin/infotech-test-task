@@ -55,7 +55,6 @@ class SmsPilotClient extends CApplicationComponent
             Yii::log("SMS sent to {$phone}: {$message}", CLogger::LEVEL_INFO, 'sms');
 
             return $result;
-
         } catch (GuzzleException $e) {
             throw new SmsException("HTTP error: " . $e->getMessage());
         }
@@ -66,10 +65,8 @@ class SmsPilotClient extends CApplicationComponent
      */
     private function normalizePhone(string $phone): string
     {
-        // Убираем всё кроме цифр
         $phone = preg_replace('/\D/', '', $phone);
 
-        // Если начинается с 8, заменяем на 7
         if (str_starts_with($phone, '8') && strlen($phone) === 11) {
             $phone = '7' . substr($phone, 1);
         }

@@ -2,10 +2,11 @@ version: '3.8'
 
 x-php-base: &php-base
   build:
-    context: ./docker/php
-    dockerfile: Dockerfile
+    context: .
+    dockerfile: docker/php/Dockerfile
   volumes:
     - ./app:/var/www/html
+    - vendor-data:/var/www/html/vendor
   environment:
     DB_HOST: ${DB_HOST}
     DB_NAME: ${DB_NAME}
@@ -30,7 +31,7 @@ services:
       - "8080:80"
     volumes:
       - ./app:/var/www/html
-      - ./app/vendor:/var/www/vendor
+      - vendor-data:/var/www/html/vendor
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
@@ -81,3 +82,4 @@ networks:
 volumes:
   mysql-data:
   rabbitmq-data:
+  vendor-data:

@@ -1,10 +1,12 @@
 <?php
+
 $this->pageTitle = 'Авторы';
 ?>
 
 <h2>Авторы</h2>
 
-<?php $this->widget('zii.widgets.grid.CGridView', [
+<?php
+$this->widget('zii.widgets.grid.CGridView', [
         'dataProvider' => $dataProvider,
         'cssFile' => false,
         'htmlOptions' => ['class' => 'table-responsive'],

@@ -1,6 +1,7 @@
-<?php $form = $this->beginWidget('CActiveForm', [
-    'id' => 'author-form',
-    'enableClientValidation' => true,
+<?php
+$form = $this->beginWidget('CActiveForm', [
+        'id' => 'author-form',
+        'enableClientValidation' => true,
 ]); ?>
 
 <div class="mb-3">
@@ -25,4 +26,5 @@
     <?= CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', ['class' => 'btn btn-primary']) ?>
 </div>
 
-<?php $this->endWidget(); ?>
+<?php
+$this->endWidget(); ?>

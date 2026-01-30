@@ -162,13 +162,16 @@ class BookService extends CApplicationComponent
             return;
         }
 
-        $values = array_map(
-            static fn(int $authorId): string => "({$bookId}, {$authorId})",
-            array_map('intval', $authorIds)
-        );
+        $params = [];
+        $placeholders = [];
+        foreach ($authorIds as $i => $authorId) {
+            $placeholders[] = "(:book_id_{$i}, :author_id_{$i})";
+            $params[":book_id_{$i}"] = $bookId;
+            $params[":author_id_{$i}"] = (int) $authorId;
+        }
 
         $db->createCommand(
-            'INSERT INTO book_authors (book_id, author_id) VALUES ' . implode(', ', $values)
-        )->execute();
+            'INSERT INTO book_authors (book_id, author_id) VALUES ' . implode(', ', $placeholders)
+        )->execute($params);
     }
 }

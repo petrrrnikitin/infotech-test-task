@@ -1,8 +1,9 @@
 <?php
+
 $form = $this->beginWidget('CActiveForm', [
-    'id' => 'book-form',
-    'enableClientValidation' => true,
-    'htmlOptions' => ['enctype' => 'multipart/form-data'],
+        'id' => 'book-form',
+        'enableClientValidation' => true,
+        'htmlOptions' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
 <div class="mb-3">
@@ -33,11 +34,13 @@ $form = $this->beginWidget('CActiveForm', [
     <?= $form->labelEx($model, 'photo', ['class' => 'form-label']) ?>
     <?= $form->fileField($model, 'photo', ['class' => 'form-control']) ?>
     <?= $form->error($model, 'photo', ['class' => 'text-danger small']) ?>
-    <?php if ($model->photo): ?>
+    <?php
+    if ($model->photo): ?>
         <div class="mt-2">
             <img src="/uploads/<?= CHtml::encode($model->photo) ?>" class="img-thumbnail" style="max-width: 100px;">
         </div>
-    <?php endif; ?>
+    <?php
+    endif; ?>
 </div>
 
 <div class="mb-3">
@@ -46,9 +49,9 @@ $form = $this->beginWidget('CActiveForm', [
     $authors = CHtml::listData(Author::model()->findAll(), 'id', 'fullName');
     $selected = $model->isNewRecord ? [] : CHtml::listData($model->authors, 'id', 'id');
     echo CHtml::listBox('Book[authorIds]', $selected, $authors, [
-        'multiple' => 'multiple',
-        'size' => 6,
-        'class' => 'form-select',
+            'multiple' => 'multiple',
+            'size' => 6,
+            'class' => 'form-select',
     ]);
     ?>
 </div>
@@ -57,4 +60,5 @@ $form = $this->beginWidget('CActiveForm', [
     <?= CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', ['class' => 'btn btn-primary']) ?>
 </div>
 
-<?php $this->endWidget(); ?>
+<?php
+$this->endWidget(); ?>
