@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: book-catalog-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./app/vendor:/var/www/vendor
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - book-catalog-network
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: book-catalog-php
+    volumes:
+      - ./app:/var/www/html
+      - ./app/vendor:/var/www/vendor
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SMSPILOT_API_KEY: ${SMSPILOT_API_KEY}
+    depends_on:
+      - mysql
+    networks:
+      - book-catalog-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: book-catalog-mysql
+    ports:
+      - "33063:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - book-catalog-network
+
+networks:
+  book-catalog-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

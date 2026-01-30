@@ -1,0 +1,19 @@
+{
+  "name": "infotech-test-task/yii1-app",
+  "description": "Book Catalog Application on Yii1",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "nikita",
+      "email": "nikita.petrashev@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": ">=8.4",
+    "yiisoft/yii": "1.1.*"
+  },
+  "config": {
+    "vendor-dir": "vendor"
+  }
+}
