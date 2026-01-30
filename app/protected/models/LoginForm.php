@@ -18,26 +18,26 @@ class LoginForm extends CFormModel
 	 * The rules state that username and password are required,
 	 * and password needs to be authenticated.
 	 */
-	public function rules()
-	{
-		return array(
+	public function rules(): array
+    {
+		return [
 			// username and password are required
-			array('username, password', 'required'),
+			['username, password', 'required'],
 			// rememberMe needs to be a boolean
-			array('rememberMe', 'boolean'),
+			['rememberMe', 'boolean'],
 			// password needs to be authenticated
-			array('password', 'authenticate'),
-		);
+			['password', 'authenticate'],
+        ];
 	}
 
 	/**
 	 * Declares attribute labels.
 	 */
-	public function attributeLabels()
-	{
-		return array(
+	public function attributeLabels(): array
+    {
+		return [
 			'rememberMe'=>'Remember me next time',
-		);
+        ];
 	}
 
 	/**
@@ -46,8 +46,8 @@ class LoginForm extends CFormModel
 	 * @param string $attribute the name of the attribute to be validated.
 	 * @param array $params additional parameters passed with rule when being executed.
 	 */
-	public function authenticate($attribute,$params)
-	{
+	public function authenticate(string $attribute, array $params): void
+    {
 		if(!$this->hasErrors())
 		{
 			$this->_identity=new UserIdentity($this->username,$this->password);
@@ -60,8 +60,8 @@ class LoginForm extends CFormModel
 	 * Logs in the user using the given username and password in the model.
 	 * @return boolean whether login is successful
 	 */
-	public function login()
-	{
+	public function login(): bool
+    {
 		if($this->_identity===null)
 		{
 			$this->_identity=new UserIdentity($this->username,$this->password);

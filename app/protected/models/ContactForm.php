@@ -16,16 +16,16 @@ class ContactForm extends CFormModel
 	/**
 	 * Declares the validation rules.
 	 */
-	public function rules()
-	{
-		return array(
+	public function rules(): array
+    {
+		return [
 			// name, email, subject and body are required
-			array('name, email, subject, body', 'required'),
+			['name, email, subject, body', 'required'],
 			// email has to be a valid email address
-			array('email', 'email'),
+			['email', 'email'],
 			// verifyCode needs to be entered correctly
-			array('verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
-		);
+			['verifyCode', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()],
+        ];
 	}
 
 	/**
@@ -33,10 +33,10 @@ class ContactForm extends CFormModel
 	 * If not declared here, an attribute would have a label that is
 	 * the same as its name with the first letter in upper case.
 	 */
-	public function attributeLabels()
-	{
-		return array(
+	public function attributeLabels(): array
+    {
+		return [
 			'verifyCode'=>'Verification Code',
-		);
+        ];
 	}
 }
