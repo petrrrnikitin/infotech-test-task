@@ -60,6 +60,87 @@ class AuthorService extends CApplicationComponent
         return $author;
     }
 
+    /**
+     * Создание нового автора
+     *
+     * @param AuthorDto $dto Данные автора
+     * @return Author Созданный автор
+     * @throws ValidationException Ошибка валидации
+     */
+    public function createAuthor(AuthorDto $dto): Author
+    {
+        $author = new Author();
+        $author
+            ->setFirstName($dto->firstName)
+            ->setLastName($dto->lastName)
+            ->setMiddleName($dto->middleName);
+
+        if (!$author->validate()) {
+            throw new ValidationException($author->getErrors());
+        }
+
+        if (!$author->save(false)) {
+            throw new ValidationException(['general' => ['Не удалось сохранить автора']]);
+        }
+
+        return $author;
+    }
+
+    /**
+     * Обновление существующего автора
+     *
+     * @param int $id ID автора
+     * @param AuthorDto $dto Данные автора
+     * @return Author Обновленный автор
+     * @throws NotFoundException Автор не найден
+     * @throws ValidationException Ошибка валидации
+     */
+    public function updateAuthor(int $id, AuthorDto $dto): Author
+    {
+        $author = $this->getAuthorById($id);
+        $author
+            ->setFirstName($dto->firstName)
+            ->setLastName($dto->lastName)
+            ->setMiddleName($dto->middleName);
+
+        if (!$author->validate()) {
+            throw new ValidationException($author->getErrors());
+        }
+
+        if (!$author->save(false)) {
+            throw new ValidationException(['general' => ['Не удалось обновить автора']]);
+        }
+
+        return $author;
+    }
+
+    /**
+     * Удаление автора
+     *
+     * @param int $id ID автора
+     * @return void
+     * @throws NotFoundException Автор не найден
+     * @throws DeleteException|CDbException Ошибка удаления
+     */
+    public function deleteAuthor(int $id): void
+    {
+        $author = $this->getById($id);
+
+        $bookCount = Yii::app()->db->createCommand()
+            ->select('COUNT(*)')
+            ->from('book_authors')
+            ->where('author_id = :author_id', [':author_id' => $author->id])
+            ->queryScalar();
+
+        if ($bookCount > 0) {
+            throw new DeleteException('Невозможно удалить автора, у которого есть книги');
+        }
+
+        if (!$author->delete()) {
+            throw new DeleteException('Не удалось удалить автора');
+        }
+    }
+
 
     /**
      * Получение ТОП авторов по году издания книг

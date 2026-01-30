@@ -5,5 +5,6 @@ app/protected/runtime/*
 app/protected/data/*.db
 app/themes/classic/views/
 app/vendor
+app/uploads/*
 .env
 .idea

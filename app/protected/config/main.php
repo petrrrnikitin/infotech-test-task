@@ -18,6 +18,7 @@ return [
 		'application.components.*',
 		'application.services.*',
 		'application.exceptions.*',
+		'application.dto.*',
     ],
 
 	'modules'=> [
@@ -33,8 +34,14 @@ return [
 	'components'=> [
 
 		'user'=> [
-			// enable cookie-based authentication
-			'allowAutoLogin'=>true,
+			'class' => 'WebUser',
+			'allowAutoLogin' => true,
+			'loginUrl' => ['site/login'],
+        ],
+
+		'request' => [
+			'enableCsrfValidation' => true,
+			'csrfTokenName' => 'csrf_token',
         ],
 
 		'urlManager'=>array(
@@ -73,6 +80,19 @@ return [
         ],
         'authorService' => [
             'class' => 'application.services.AuthorService',
+        ],
+        'userService' => [
+            'class' => 'application.services.UserService',
+        ],
+        'authManager' => [
+            'class' => 'CPhpAuthManager',
+            'authFile' => dirname(__FILE__) . '/auth.php',
+        ],
+        'fileUploader' => [
+            'class' => 'application.components.FileUploader',
+            'baseUploadPath' => '/var/www/html/uploads',
+            'maxFileSize' => 5 * 1024 * 1024, // 5MB
+            'allowedExtensions' => ['jpg', 'jpeg', 'png'],
         ],
 
     ],

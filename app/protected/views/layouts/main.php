@@ -29,12 +29,50 @@
                     <li class="nav-item">
                         <?= CHtml::link('Отчет', ['/report/topAuthors'], ['class' => 'nav-link']) ?>
                     </li>
+                    <?php if (!Yii::app()->user->isGuest): ?>
+                        <li class="nav-item">
+                            <?= CHtml::link('Добавить книгу', ['/book/create'], ['class' => 'nav-link']) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= CHtml::link('Добавить автора', ['/author/create'], ['class' => 'nav-link']) ?>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+                <ul class="navbar-nav">
+                    <?php if (!Yii::app()->user->isGuest): ?>
+                        <li class="nav-item">
+                            <?= CHtml::link('Выйти', ['/site/logout'], ['class' => 'nav-link']) ?>
+                        </li>
+                    <?php else: ?>
+                        <li class="nav-item">
+                            <?= CHtml::link('Войти', ['/site/login'], ['class' => 'nav-link']) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= CHtml::link('Регистрация', ['/site/register'], ['class' => 'nav-link']) ?>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="bg-white p-4 rounded shadow-sm">
-        <?= $content ?>
+    <div class="container">
+        <div class="bg-white p-4 rounded shadow-sm">
+            <?php if (Yii::app()->user->hasFlash('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show">
+                    <?= Yii::app()->user->getFlash('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (Yii::app()->user->hasFlash('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <?= Yii::app()->user->getFlash('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <?= $content ?>
+        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

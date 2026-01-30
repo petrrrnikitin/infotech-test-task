@@ -33,8 +33,6 @@ class Author extends CActiveRecord
 		return [
 			['first_name, last_name', 'required'],
 			['first_name, last_name, middle_name', 'length', 'max'=>100],
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
 			['id, first_name, last_name, middle_name', 'safe', 'on'=>'search'],
         ];
 	}
@@ -56,9 +54,9 @@ class Author extends CActiveRecord
     {
 		return [
 			'id' => 'ID',
-			'first_name' => 'First Name',
-			'last_name' => 'Last Name',
-			'middle_name' => 'Middle Name',
+			'first_name' => 'Имя',
+			'last_name' => 'Фамилия',
+			'middle_name' => 'Отчество',
             'full_name' => 'ФИО',
             'books_count' => 'Количество книг',
         ];
@@ -108,5 +106,39 @@ class Author extends CActiveRecord
             $this->first_name,
             $this->middle_name,
         ]));
+    }
+
+
+    public function getFirstName(): string
+    {
+        return $this->first_name;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->first_name = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->last_name = $lastName;
+        return $this;
+    }
+
+    public function getMiddleName(): ?string
+    {
+        return $this->middle_name;
+    }
+
+    public function setMiddleName(?string $middleName): self
+    {
+        $this->middle_name = $middleName;
+        return $this;
     }
 }

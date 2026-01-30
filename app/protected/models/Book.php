@@ -34,7 +34,7 @@ class Book extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return [
-			['title, year, isbn, created_at, updated_at', 'required'],
+			['title, year, isbn', 'required'],
 			['year', 'numerical', 'integerOnly'=>true],
 			['title, photo', 'length', 'max'=>255],
 			['isbn', 'length', 'max'=>20],
@@ -124,5 +124,61 @@ class Book extends CActiveRecord
                 'updateAttribute' => 'updated_at',
             ],
         ];
+    }
+
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getYear(): int
+    {
+        return (int)$this->year;
+    }
+
+    public function setYear(int $year): self
+    {
+        $this->year = $year;
+        return $this;
+    }
+
+    public function getIsbn(): string
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn(string $isbn): self
+    {
+        $this->isbn = $isbn;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
+        return $this;
     }
 }

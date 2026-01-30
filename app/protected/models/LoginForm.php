@@ -36,7 +36,9 @@ class LoginForm extends CFormModel
 	public function attributeLabels(): array
     {
 		return [
-			'rememberMe'=>'Remember me next time',
+			'username' => 'Имя пользователя',
+			'password' => 'Пароль',
+			'rememberMe' => 'Запомнить меня',
         ];
 	}
 
@@ -62,18 +64,21 @@ class LoginForm extends CFormModel
 	 */
 	public function login(): bool
     {
-		if($this->_identity===null)
-		{
-			$this->_identity=new UserIdentity($this->username,$this->password);
+		if ($this->_identity === null) {
+			$this->_identity = new UserIdentity($this->username, $this->password);
 			$this->_identity->authenticate();
 		}
-		if($this->_identity->errorCode===UserIdentity::ERROR_NONE)
-		{
-			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
-			Yii::app()->user->login($this->_identity,$duration);
+
+		if ($this->_identity->errorCode === UserIdentity::ERROR_NONE) {
+			$duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
+
+			// Регенерация session ID для защиты от session fixation
+			Yii::app()->session->regenerateID(true);
+
+			Yii::app()->user->login($this->_identity, $duration);
 			return true;
 		}
-		else
-			return false;
+
+		return false;
 	}
 }

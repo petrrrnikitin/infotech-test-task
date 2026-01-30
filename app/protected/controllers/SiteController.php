@@ -5,8 +5,8 @@ class SiteController extends Controller
 	/**
 	 * Declares class-based actions.
 	 */
-	public function actions()
-	{
+	public function actions(): array
+    {
 		return [
 			// captcha action renders the CAPTCHA image displayed on the contact page
 			'captcha'=> [
@@ -34,8 +34,8 @@ class SiteController extends Controller
 	/**
 	 * This is the action to handle external exceptions.
 	 */
-	public function actionError()
-	{
+	public function actionError(): void
+    {
 		if($error=Yii::app()->errorHandler->error)
 		{
 			if(Yii::app()->request->isAjaxRequest)
@@ -45,64 +45,65 @@ class SiteController extends Controller
 		}
 	}
 
-	/**
-	 * Displays the contact page
-	 */
-	public function actionContact()
-	{
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
-			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
-				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
-				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
-				$headers="From: $name <{$model->email}>\r\n".
-					"Reply-To: {$model->email}\r\n".
-					"MIME-Version: 1.0\r\n".
-					"Content-Type: text/plain; charset=UTF-8";
-
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
-			}
-		}
-		$this->render('contact',array('model'=>$model));
-	}
 
 	/**
 	 * Displays the login page
 	 */
-	public function actionLogin()
+	public function actionLogin(): void
 	{
-		$model=new LoginForm;
-
-		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+		if (!Yii::app()->user->isGuest) {
+			$this->redirect(Yii::app()->homeUrl);
+			return;
 		}
 
-		// collect user input data
-		if(isset($_POST['LoginForm']))
-		{
-			$model->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
+		$model = new LoginForm();
+		$formData = Yii::app()->request->getPost('LoginForm');
+
+		if ($formData !== null) {
+			$model->attributes = $formData;
+
+			if ($model->validate() && $model->login()) {
+				Yii::app()->user->setFlash('success', 'Вы успешно вошли в систему');
 				$this->redirect(Yii::app()->user->returnUrl);
+				return;
+			}
 		}
-		// display the login form
-		$this->render('login',array('model'=>$model));
+
+		$this->render('login', ['model' => $model]);
 	}
+
+    public function actionRegister(): void
+    {
+        if (!Yii::app()->user->isGuest) {
+            $this->redirect(['site/index']);
+            return;
+        }
+
+        $userData = Yii::app()->request->getPost('User');
+
+        if ($userData !== null) {
+            try {
+                Yii::app()->userService->register(UserRegistrationDto::fromRequest($userData));
+                Yii::app()->user->setFlash('success', 'Регистрация прошла успешно. Теперь вы можете войти.');
+                $this->redirect(['site/login']);
+                return;
+            } catch (ValidationException $e) {
+                Yii::app()->user->setFlash('error', $e->getMessage());
+            }
+        }
+
+        $model = new User();
+        $model->scenario = 'register';
+        $this->render('register', ['model' => $model]);
+    }
 
 	/**
 	 * Logs out the current user and redirect to homepage.
 	 */
-	public function actionLogout()
+	public function actionLogout(): void
 	{
 		Yii::app()->user->logout();
+		Yii::app()->user->setFlash('success', 'Вы вышли из системы');
 		$this->redirect(Yii::app()->homeUrl);
 	}
 }
