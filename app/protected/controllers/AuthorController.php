@@ -99,4 +99,25 @@ class AuthorController extends Controller
 
         $this->redirect(['index']);
     }
+
+
+    /**
+     * @throws CHttpException
+     */
+    public function actionSubscribe(int $id): void
+    {
+        $phone = Yii::app()->request->getPost('phone')
+            ?? throw new CHttpException(400, 'Телефон обязателен');
+
+        try {
+            Yii::app()->subscriptionService->subscribe($id, $phone);
+            Yii::app()->user->setFlash('success', 'Вы успешно подписались на уведомления');
+        } catch (ValidationException|DuplicateSubscriptionException $e) {
+            Yii::app()->user->setFlash('error', $e->getMessage());
+        } catch (NotFoundException $e) {
+            throw new CHttpException(404, $e->getMessage());
+        }
+
+        $this->redirect(['view', 'id' => $id]);
+    }
 }

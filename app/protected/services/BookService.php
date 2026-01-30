@@ -72,6 +72,12 @@ class BookService extends CApplicationComponent
 
         $this->updateBookAuthors($book, $dto->authorIds);
 
+        try {
+            Yii::app()->subscriptionService->queueSmsNotifications($book);
+        } catch (QueueException $e) {
+            Yii::log("Failed to queue SMS notifications: {$e->getMessage()}", CLogger::LEVEL_ERROR);
+        }
+
         return $book;
     }
 

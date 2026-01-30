@@ -26,14 +26,12 @@ class Subscription extends CActiveRecord
     {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
-			array('author_id, phone, created_at', 'required'),
-			array('author_id', 'numerical', 'integerOnly'=>true),
-			array('phone', 'length', 'max'=>20),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, author_id, phone, created_at', 'safe', 'on'=>'search'),
-		);
+		return [
+			['author_id, phone', 'required'],
+			['author_id', 'numerical', 'integerOnly'=>true],
+			['phone', 'length', 'max'=>20],
+			['id, author_id, phone, created_at', 'safe', 'on'=>'search'],
+        ];
 	}
 
 	/**
@@ -41,10 +39,7 @@ class Subscription extends CActiveRecord
 	 */
 	public function relations(): array
     {
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-		);
+		return [];
 	}
 
 	/**
@@ -52,12 +47,12 @@ class Subscription extends CActiveRecord
 	 */
 	public function attributeLabels(): array
     {
-		return array(
+		return [
 			'id' => 'ID',
 			'author_id' => 'Author',
 			'phone' => 'Phone',
 			'created_at' => 'Created At',
-		);
+        ];
 	}
 
 	/**

@@ -19,6 +19,7 @@ return [
 		'application.services.*',
 		'application.exceptions.*',
 		'application.dto.*',
+		'application.jobs.*',
     ],
 
 	'modules'=> [
@@ -93,6 +94,20 @@ return [
             'baseUploadPath' => '/var/www/html/uploads',
             'maxFileSize' => 5 * 1024 * 1024, // 5MB
             'allowedExtensions' => ['jpg', 'jpeg', 'png'],
+        ],
+        'subscriptionService' => [
+            'class' => 'application.services.SubscriptionService',
+        ],
+        'queue' => [
+            'class' => 'application.components.QueueComponent',
+            'host' => getenv('RABBITMQ_HOST'),
+            'port' => (int) getenv('RABBITMQ_PORT'),
+            'user' => getenv('RABBITMQ_USER'),
+            'password' => getenv('RABBITMQ_PASSWORD'),
+        ],
+        'smsPilot' => [
+            'class' => 'application.components.SmsPilotClient',
+            'apiKey' => getenv('SMSPILOT_API_KEY'),
         ],
 
     ],

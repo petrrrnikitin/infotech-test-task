@@ -38,4 +38,21 @@ $this->pageTitle = $model->getFullName();
     <div class="alert alert-info">У этого автора пока нет книг в каталоге.</div>
 <?php endif; ?>
 
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Подписаться на уведомления</h5>
+    </div>
+    <div class="card-body">
+        <?= CHtml::beginForm(['subscribe', 'id' => $model->id], 'post', ['class' => 'row g-3 align-items-end']) ?>
+        <div class="col-auto">
+            <label for="phone" class="form-label">Телефон (формат: +7XXXXXXXXXX):</label>
+            <input type="text" name="phone" id="phone" class="form-control" placeholder="+79001234567" pattern="^\+7\d{10}$" required>
+        </div>
+        <div class="col-auto">
+            <?= CHtml::submitButton('Подписаться', ['class' => 'btn btn-success']) ?>
+        </div>
+        <?= CHtml::endForm() ?>
+    </div>
+</div>
+
 <p><?= CHtml::link('Назад к списку', ['index'], ['class' => 'btn btn-secondary']) ?></p>
